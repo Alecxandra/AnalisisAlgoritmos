@@ -429,6 +429,7 @@ public class Ventana_principal extends javax.swing.JFrame {
         this.panelpuntos.add(this.panel_botones);
         this.puntos_cercanos.add(this.panelpuntos);
         this.puntos_cercanos.repaint();
+        this.puntos_cercanos.pack();
         this.puntos_cercanos.setVisible(true);
     }//GEN-LAST:event_jButton6MouseClicked
 

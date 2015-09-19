@@ -4,10 +4,12 @@ package analisis_proyecto1;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Random;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
@@ -43,10 +45,15 @@ public class chart {
                 "Par de puntos mas cercanos",
                 "X",
                 "Y",
-                dataset,
-                PlotOrientation.VERTICAL,
+                dataset, 
+               PlotOrientation.VERTICAL,
                 true, true, false
         );
+        ValueMarker marker = new ValueMarker(0);
+        marker.setPaint(getColor());
+        marker.
+        ( (XYPlot) xylineChart.getPlot()).addDomainMarker(marker);
+        
         ChartPanel chartPanel = new ChartPanel(xylineChart);
         chartPanel.setPreferredSize(new java.awt.Dimension(560, 367));
         final XYPlot plot = xylineChart.getXYPlot();
@@ -57,6 +64,10 @@ public class chart {
         renderer.setSeriesStroke(0, new BasicStroke(4.0f));
         plot.setRenderer(renderer);
         return chartPanel;
+    }
+    
+    private Color getColor() {
+        return new Color( 60 + new Random().nextInt(120), 60 + new Random().nextInt(120), 60 + new Random().nextInt(120));
     }
 
 }
