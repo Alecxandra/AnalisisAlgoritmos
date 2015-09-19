@@ -49,10 +49,11 @@ public class chart {
                PlotOrientation.VERTICAL,
                 true, true, false
         );
+        //------------------------Esto agregar un marcador 
         ValueMarker marker = new ValueMarker(0);
         marker.setPaint(getColor());
-        marker.
         ( (XYPlot) xylineChart.getPlot()).addDomainMarker(marker);
+        //------------------------
         
         ChartPanel chartPanel = new ChartPanel(xylineChart);
         chartPanel.setPreferredSize(new java.awt.Dimension(560, 367));
