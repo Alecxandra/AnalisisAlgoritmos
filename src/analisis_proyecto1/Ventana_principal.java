@@ -71,8 +71,8 @@ public class Ventana_principal extends javax.swing.JFrame {
         simulacion_heap = new javax.swing.JDialog();
         par_cercano = new javax.swing.JDialog();
         jLabel8 = new javax.swing.JLabel();
-        coor_x = new javax.swing.JSpinner();
         coor_y = new javax.swing.JSpinner();
+        coor_x = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
@@ -138,10 +138,10 @@ public class Ventana_principal extends javax.swing.JFrame {
         jLabel8.setText("Ingrese la coordenada X y Y de cada punto:");
         par_cercano.getContentPane().add(jLabel8);
         jLabel8.setBounds(140, 0, 430, 60);
-        par_cercano.getContentPane().add(coor_x);
-        coor_x.setBounds(350, 90, 60, 40);
         par_cercano.getContentPane().add(coor_y);
-        coor_y.setBounds(260, 90, 60, 40);
+        coor_y.setBounds(350, 90, 60, 40);
+        par_cercano.getContentPane().add(coor_x);
+        coor_x.setBounds(260, 90, 60, 40);
 
         jLabel9.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(240, 240, 240));
@@ -421,14 +421,84 @@ public class Ventana_principal extends javax.swing.JFrame {
 
     //------------------------Par de puntos mas cercanos------------------------------------
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
-        grafica.createDataset(puntos);
-        ChartPanel actual = grafica.generar_panel();
+        puntos.add(new puntos(20,4));
+        puntos.add(new puntos(1,10));
+        puntos.add(new puntos(2,24));
+        puntos.add(new puntos(10,3));
+        puntos.add(new puntos(5,10));
+        puntos.add(new puntos(3,3));
+        puntos.add(new puntos(7,3));
+        puntos.add(new puntos(21,7));
+        puntos.add(new puntos(5,5));
+        puntos.add(new puntos(10,7));
+        puntos.add(new puntos(1,1));
+        puntos.add(new puntos(1,2));
+        puntos[] general1 = convertir();
+        puntos[] general2 =  convertir();
+        puntos[] Px = sortx(general1);
+        puntos[] Py = sorty(general2);
+        this.ParMasCercano= new cerca(puntos);
+        distancia=this.ParMasCercano.mas_cerca(Px, Py, general1.length);
+        medianas = this.ParMasCercano.getMedianas();
+       // System.out.println("size: mediana " +medianas.size());
+        grafica.createDataset(puntos,null,0);
+        //----Panel Inicial-------------------------------
+         actual = grafica.generar_panel(null,0);
+         
+        //---------Boton Siguiente------------------------
         JButton next = new JButton("Siguiente");
-        this.panelpuntos.add(actual);
+        next.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                indicem++;
+                if(indicem<medianas.size()){
+                panelpuntos.remove(actual);
+                actual = grafica.generar_panel(medianas, indicem);
+                panelpuntos.add(actual);
+                panelpuntos.updateUI();
+                } else if(indicem==medianas.size()){
+                    grafica.createDataset(puntos, ParMasCercano.getPares(),1);
+                    panelpuntos.remove(actual);
+                    actual = grafica.generar_panel(medianas, indicem - 1);
+                    panelpuntos.add(actual);
+                    panelpuntos.updateUI();
+                    String resp="El par de puntos mas cercanos son:"+'\n';
+                    resp+="("+ParMasCercano.getPares()[0].getX()+","+ParMasCercano.getPares()[0].getY()+")";
+                    resp+=",";
+                    resp+="("+ParMasCercano.getPares()[1].getX()+","+ParMasCercano.getPares()[1].getY()+")"+'\n';
+                    resp+="Distancia:"+distancia;
+                   JOptionPane.showMessageDialog(null,resp);
+                }else{
+                  indicem= medianas.size()-1;
+                }
+                
+            }
+        });
+        
+        //-----------Boton Antes-----------------
+        JButton prev = new JButton("Antes");
+        prev.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                indicem--;
+                if(indicem>=0){
+                panelpuntos.remove(actual);
+                actual = grafica.generar_panel(medianas, indicem);
+                panelpuntos.add(actual);
+                panelpuntos.updateUI();
+                
+                }else{
+                indicem=0;
+                }
+                
+            }
+        });
+        
+        panelpuntos.add(actual);
+        this.panel_botones.add(prev);
         this.panel_botones.add(next);
         this.panelpuntos.add(this.panel_botones);
         this.puntos_cercanos.add(this.panelpuntos);
         this.puntos_cercanos.repaint();
+        this.puntos_cercanos.pack();
         this.puntos_cercanos.setVisible(true);
     }//GEN-LAST:event_jButton6MouseClicked
 
@@ -494,27 +564,31 @@ public class Ventana_principal extends javax.swing.JFrame {
     ArrayList<Integer> heap_sort_numbers = new ArrayList();
     ArrayList<puntos> puntos = new ArrayList();
     ArrayList<DelegateTree<String, String>> arboles = new ArrayList();
+    ArrayList<Integer> medianas= new ArrayList();
     BasicVisualizationServer<String, String> vs;
-    GridLayout gridp = new GridLayout(2,0);
+    GridLayout gridp = new GridLayout(2, 0);
     chart grafica = new chart();
     int indice = -1;
+    int indicem = -1;
+    double distancia=0;
     JFrame heap = new JFrame();
-    JFrame puntos_cercanos= new JFrame();
+    JFrame puntos_cercanos = new JFrame();
     JPanel PanelArbol = new JPanel();
     FlowLayout flowp = new FlowLayout();
-    JPanel panelpuntos= new JPanel(gridp);
-    JPanel panel_botones= new JPanel(flowp);
-    GridLayout grid = new GridLayout(2,0);
+    JPanel panelpuntos = new JPanel(gridp);
+    JPanel panel_botones = new JPanel(flowp);
+    GridLayout grid = new GridLayout(2, 0);
     FlowLayout flow = new FlowLayout();
-    JPanel panelgenera= new JPanel(grid);
+    JPanel panelgenera = new JPanel(grid);
     JPanel Panelarreglo = new JPanel(flow);
-
+    cerca ParMasCercano;
+    ChartPanel actual;
     private int IncrementarIndice(int band) {
-         //0->adelante
+        //0->adelante
         //1->atras
         if (band == 0) {
             this.indice++;
-           
+
         } else {
             this.indice--;
         }
@@ -522,18 +596,63 @@ public class Ventana_principal extends javax.swing.JFrame {
         return this.indice;
 
     }
-    
-    private boolean num_repetido(int x){
+
+    private boolean num_repetido(int x) {
         //true, si hay repetido
         //false, no hay repetido
-       boolean repetido= false;
+        boolean repetido = false;
         for (int i = 0; i < this.heap_sort_numbers.size(); i++) {
-            if(this.heap_sort_numbers.get(i)==x){
-               repetido=true;
-               break;
+            if (this.heap_sort_numbers.get(i) == x) {
+                repetido = true;
+                break;
             }
         }
         return repetido;
     }
 
+    private puntos[] sortx(puntos[] puntos) {
+        for (int i = 0; i < puntos.length - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < puntos.length; j++) {
+                if (puntos[j].getX() < puntos[minimo].getX()) {
+                    minimo = j;
+                }
+
+            }
+            if (i != minimo) {
+                puntos temp = puntos[i];
+                puntos[i] = puntos[minimo];
+                puntos[minimo] = temp;
+            }
+        }
+        return puntos;
+    }
+
+    private puntos[] sorty(puntos[] puntos) {
+        for (int i = 0; i < puntos.length - 1; i++) {
+            int minimo = i;
+            for (int j = i + 1; j < puntos.length; j++) {
+                if (puntos[j].getY() < puntos[minimo].getY()) {
+                    minimo = j;
+                }
+
+            }
+            if (i != minimo) {
+                puntos temp = puntos[i];
+                puntos[i] = puntos[minimo];
+                puntos[minimo] = temp;
+            }
+        }
+        return puntos;
+    }
+
+    private puntos[] convertir() {
+        puntos[] x = new puntos[puntos.size()];
+        for (int i = 0; i < puntos.size(); i++) {
+            x[i] = puntos.get(i);
+        }
+        return x;
+    }
+    
+    ;
 }

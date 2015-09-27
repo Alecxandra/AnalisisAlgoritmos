@@ -114,14 +114,14 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JSpinner" name="coor_x">
+        <Component class="javax.swing.JSpinner" name="coor_y">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="350" y="90" width="60" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JSpinner" name="coor_y">
+        <Component class="javax.swing.JSpinner" name="coor_x">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="260" y="90" width="60" height="40"/>
