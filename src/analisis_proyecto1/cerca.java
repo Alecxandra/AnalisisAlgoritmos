@@ -16,6 +16,10 @@ public class cerca {
     ArrayList<Integer> medianas = new ArrayList();
     ArrayList<puntos> puntosoriginales = new ArrayList();
     ArrayList<bitacora_puntos> bitacora = new ArrayList();
+
+    public ArrayList<bitacora_puntos> getBitacora() {
+        return bitacora;
+    }
     public cerca(ArrayList<puntos> puntosoriginales) {
         this.puntosoriginales = puntosoriginales;
     }
@@ -70,47 +74,54 @@ public class cerca {
         return result;
     }
 
-    public double minimo(double x, double y) {
-        if (x > y) {
+    public puntos_cercanos minimo(puntos_cercanos x, puntos_cercanos y) {
+        if (x.getDistancia() > y.getDistancia()) {
             return y;
         }
         return x;
     }
 
-    public double fuerzaBruta(puntos[] puntos) {
+    public puntos_cercanos fuerzaBruta(puntos[] puntos) {
+        puntos[] p= new puntos[2];
         double distancia_minima = Double.MAX_VALUE;
         for (int i = 0; i < puntos.length; i++) {
             for (int j = i + 1; j < puntos.length; j++) {
                 double dist = distance(puntos[i], puntos[j]);
                   if (dist < distancia_minima) {
                     distancia_minima = dist;
-                    pares[0] = puntos[i];
-                    pares[1] = puntos[j];
+                    p[0] = puntos[i];
+                    p[1] = puntos[j];
                     
                 }
             }
         }
-        
-        return distancia_minima;
+        puntos_cercanos x =new puntos_cercanos(p,distancia_minima);
+        return x;
     }
 
-    public double ultimos_puntos(puntos[] cercanos, int tam, double minimo) {
+    public puntos_cercanos ultimos_puntos(puntos[] cercanos, int tam, puntos_cercanos minimo) {
+        puntos[] p= new puntos[2];
+        boolean entro=false;
+        double distancia_minima= minimo.getDistancia();
         for (int i = 0; i < tam; i++) {
             for (int j = i + 1; j < tam; j++) {
                 double dist = distance(cercanos[i], cercanos[j]);
-                if (dist < minimo) {
-                    minimo = dist;
-                    pares[0] = cercanos[i];
-                    pares[1] = cercanos[j];
-                    
+                if (dist < distancia_minima) {
+                    distancia_minima = dist;
+                    p[0] = cercanos[i];
+                    p[1] = cercanos[j];
+                    entro=true;
                 }
             }
         }
-        
+        if(entro==true){
+        puntos_cercanos x = new puntos_cercanos(p,distancia_minima);
+        return x;
+        }
         return minimo;
     }
 
-    public double mas_cerca(puntos[] Px, puntos[] Py, int n) {
+    public puntos_cercanos mas_cerca(puntos[] Px, puntos[] Py, int n) {
         //---La mitad del plano de los puntos
         if (n <= 3) {
            return fuerzaBruta(Py);
@@ -146,31 +157,30 @@ public class cerca {
         sorty(izquierda);
         sorty(derecha);
         
-        double distizquierda = mas_cerca(Px, izquierda, izquierda.length);
-        System.out.println("pares 1------");
-        System.out.println(pares[0].getX()+","+pares[0].getY());
-        System.out.println(pares[1].getX()+","+pares[1].getY());
-        double disderecha = mas_cerca(Px, derecha, derecha.length);
-        System.out.println("pares 2------");
-        System.out.println(pares[0].getX()+","+pares[0].getY());
-        System.out.println(pares[1].getX()+","+pares[1].getY()); 
+        puntos_cercanos distizquierda = mas_cerca(Px, izquierda, izquierda.length);
+        puntos_cercanos disderecha = mas_cerca(Px, derecha, derecha.length);
+        
         //--encontrando la distancia mas pequeña
-        double Smallestd = minimo(distizquierda, disderecha);
-
+        puntos_cercanos Smallestd = minimo(distizquierda, disderecha);
+        
         //---Creando un arreglo con los puntos cercanos a Smallestd----
         //la linea que pasa en medio del punto
         puntos[] enmedio = new puntos[n];
         int indice = 0;
         for (int i = 0; i < n; i++) {
-            if (Math.abs(Py[i].getX() - punto_medio.getX()) < Smallestd) {
+            if (Math.abs(Py[i].getX() - punto_medio.getX()) < Smallestd.getDistancia()) {
                 enmedio[indice] = Py[i];
                 indice++;
             }
         }
 
-        double ultimo = ultimos_puntos(enmedio, indice, Smallestd);
-
-        return minimo(Smallestd, ultimo);
+        puntos_cercanos ultimo = ultimos_puntos(enmedio, indice, Smallestd);
+        puntos_cercanos min= minimo(Smallestd, ultimo);
+         System.out.println("----Antes de retorno----------");
+         System.out.println(min.getPuntos()[0].getX()+","+min.getPuntos()[0].getY());
+         System.out.println(min.getPuntos()[1].getX()+","+min.getPuntos()[1].getY());
+         bitacora.add(new bitacora_puntos(min.getPuntos()[0],min.getPuntos()[1]));
+        return min;
     }
 
 }

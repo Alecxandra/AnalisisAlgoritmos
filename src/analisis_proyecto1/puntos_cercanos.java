@@ -12,7 +12,31 @@ import java.util.ArrayList;
  * @author alecx
  */
 public class puntos_cercanos {
-    ArrayList<puntos> puntos;
+   puntos[] puntos= new puntos[2];
+    double distancia=0;
+
+    public puntos_cercanos(puntos[] puntos, double distancia) {
+     this.puntos= puntos;
+     this.distancia= distancia;
+    }
+
+    public void setPuntos(puntos[] puntos) {
+        this.puntos = puntos;
+    }
+
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
+    }
+
+    public puntos[] getPuntos() {
+        return puntos;
+    }
+
+    public double getDistancia() {
+        return distancia;
+    }
+    
+    
     
     
 }

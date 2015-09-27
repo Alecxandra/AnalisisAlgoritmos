@@ -12,10 +12,16 @@ package analisis_proyecto1;
 public class bitacora_puntos {
     puntos p1;
     puntos p2;
-
+    puntos[] arreglo= new puntos[2];
     public bitacora_puntos(puntos p1, puntos p2) {
         this.p1 = p1;
         this.p2 = p2;
+        arreglo[0]=this.p1;
+        arreglo[1]= this.p2;
+    }
+
+    public puntos[] getArreglo() {
+        return arreglo;
     }
 
     public puntos getP1() {

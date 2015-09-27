@@ -446,6 +446,9 @@ public class Ventana_principal extends javax.swing.JFrame {
         this.ParMasCercano = new cerca(puntos);
         distancia = this.ParMasCercano.mas_cerca(Px, Py, general1.length);
         medianas = this.ParMasCercano.getMedianas();
+        bitacora = this.ParMasCercano.getBitacora();
+        System.out.println("size bitacora:"+bitacora.size());
+        System.out.println("size medianas:"+medianas.size());
         grafica.createDataset(puntos, null, 0);
         //----Panel Inicial-------------------------------
         actual = grafica.generar_panel(null, 0);
@@ -455,25 +458,28 @@ public class Ventana_principal extends javax.swing.JFrame {
         next.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 indicem++;
+                indicep++;
                 if (indicem < medianas.size()) {
                     panelpuntos.remove(actual);
+                    grafica.createDataset(puntos, bitacora.get(indicep).getArreglo(), 0);
                     actual = grafica.generar_panel(medianas, indicem);
                     panelpuntos.add(actual);
                     panelpuntos.updateUI();
                 } else if (indicem == medianas.size()) {
-                    grafica.createDataset(puntos, ParMasCercano.getPares(), 1);
+                    grafica.createDataset(puntos, distancia.getPuntos(), 1);
                     panelpuntos.remove(actual);
                     actual = grafica.generar_panel(medianas, indicem - 1);
                     panelpuntos.add(actual);
                     panelpuntos.updateUI();
                     String resp = "El par de puntos mas cercanos son:" + '\n';
-                    resp += "(" + ParMasCercano.getPares()[0].getX() + "," + ParMasCercano.getPares()[0].getY() + ")";
+                    resp += "(" + distancia.getPuntos()[0].getX() + "," + distancia.getPuntos()[0].getY() + ")";
                     resp += ",";
-                    resp += "(" + ParMasCercano.getPares()[1].getX() + "," + ParMasCercano.getPares()[1].getY() + ")" + '\n';
-                    resp += "Distancia:" + distancia;
+                    resp += "(" + distancia.getPuntos()[1].getX() + "," + distancia.getPuntos()[1].getY() + ")" + '\n';
+                    resp += "Distancia:" + distancia.getDistancia();
                     JOptionPane.showMessageDialog(null, resp);
                 } else {
                     indicem = medianas.size() - 1;
+                    indicep= bitacora.size()-1;
                 }
 
             }
@@ -570,12 +576,14 @@ public class Ventana_principal extends javax.swing.JFrame {
     ArrayList<puntos> puntos = new ArrayList();
     ArrayList<DelegateTree<String, String>> arboles = new ArrayList();
     ArrayList<Integer> medianas= new ArrayList();
+    ArrayList<bitacora_puntos> bitacora = new ArrayList();
     BasicVisualizationServer<String, String> vs;
     GridLayout gridp = new GridLayout(2, 0);
     chart grafica = new chart();
     int indice = -1;
     int indicem = -1;
-    double distancia=0;
+    int indicep= -1;
+    puntos_cercanos distancia;
     JFrame heap = new JFrame();
     JFrame puntos_cercanos = new JFrame();
     JPanel PanelArbol = new JPanel();
