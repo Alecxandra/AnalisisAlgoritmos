@@ -124,7 +124,7 @@ public class cerca {
     public puntos_cercanos mas_cerca(puntos[] Px, puntos[] Py, int n) {
         //---La mitad del plano de los puntos
         if (n <= 3) {
-           return fuerzaBruta(Py);
+            return fuerzaBruta(Py);
         }
 
         int mediana = n / 2;
@@ -156,13 +156,13 @@ public class cerca {
 
         sorty(izquierda);
         sorty(derecha);
-        
+
         puntos_cercanos distizquierda = mas_cerca(Px, izquierda, izquierda.length);
         puntos_cercanos disderecha = mas_cerca(Px, derecha, derecha.length);
-        
+
         //--encontrando la distancia mas pequeña
         puntos_cercanos Smallestd = minimo(distizquierda, disderecha);
-        
+
         //---Creando un arreglo con los puntos cercanos a Smallestd----
         //la linea que pasa en medio del punto
         puntos[] enmedio = new puntos[n];
@@ -175,11 +175,8 @@ public class cerca {
         }
 
         puntos_cercanos ultimo = ultimos_puntos(enmedio, indice, Smallestd);
-        puntos_cercanos min= minimo(Smallestd, ultimo);
-         System.out.println("----Antes de retorno----------");
-         System.out.println(min.getPuntos()[0].getX()+","+min.getPuntos()[0].getY());
-         System.out.println(min.getPuntos()[1].getX()+","+min.getPuntos()[1].getY());
-         bitacora.add(new bitacora_puntos(min.getPuntos()[0],min.getPuntos()[1]));
+        puntos_cercanos min = minimo(Smallestd, ultimo);
+        bitacora.add(new bitacora_puntos(min.getPuntos()[0], min.getPuntos()[1]));
         return min;
     }
 

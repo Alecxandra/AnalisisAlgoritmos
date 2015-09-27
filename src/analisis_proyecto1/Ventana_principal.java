@@ -51,6 +51,7 @@ public class Ventana_principal extends javax.swing.JFrame {
         this.HeapSort.setSize(674, 220);
         this.par_cercano.setSize(736, 279);
         this.heap.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.puntos_cercanos.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
       }
 
     /**
@@ -368,7 +369,7 @@ public class Ventana_principal extends javax.swing.JFrame {
         JButton terminar = new JButton("Salir");
         terminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
+
                 heap_sort_numbers = new ArrayList();
                 arboles = new ArrayList();
                 indice = -1;
@@ -377,7 +378,7 @@ public class Ventana_principal extends javax.swing.JFrame {
                 flow = new FlowLayout();
                 panelgenera = new JPanel(grid);
                 Panelarreglo = new JPanel(flow);
-                
+
                 heap.dispose();
                 HeapSort.dispose();
                 heap = new JFrame();
@@ -410,18 +411,22 @@ public class Ventana_principal extends javax.swing.JFrame {
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
         int size = this.puntos.size();
-        this.puntos.add(new puntos((int) this.coor_x.getValue(), (int) this.coor_y.getValue()));
-        if ((size + 1) == this.puntos.size()) {
-            JOptionPane.showMessageDialog(null, "Se ha agregado el punto");
+        boolean rep = puntos_repetidos((int) this.coor_x.getValue(), (int) this.coor_y.getValue());
+
+        if (rep == true) {
+            JOptionPane.showMessageDialog(null, "El punto ya esta en la lista, no se aceptan repetidos");
 
         } else {
-            JOptionPane.showMessageDialog(null, "No se ha agregado el punto");
+            this.puntos.add(new puntos((int) this.coor_x.getValue(), (int) this.coor_y.getValue()));
+            if ((size + 1) == this.puntos.size()) {
+                JOptionPane.showMessageDialog(null, "Se ha agregado el punto");
+            }
         }
     }//GEN-LAST:event_jButton5MouseClicked
 
     //------------------------Par de puntos mas cercanos------------------------------------
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
-        puntos.add(new puntos(2, 3));
+      /*puntos.add(new puntos(2, 3));
         puntos.add(new puntos(12, 30));
         puntos.add(new puntos(40, 50));
         puntos.add(new puntos(5, 1));
@@ -438,7 +443,11 @@ public class Ventana_principal extends javax.swing.JFrame {
         puntos.add(new puntos(9, 5));
         puntos.add(new puntos(24, 5));
         puntos.add(new puntos(30, 6));
-        puntos.add(new puntos(38, 60));
+        puntos.add(new puntos(38, 60));*/
+        if(puntos.size()==1){
+        JOptionPane.showMessageDialog(null, "Solo existe un punto");
+        }else{
+        
         puntos[] general1 = convertir();
         puntos[] general2 = convertir();
         puntos[] Px = sortx(general1);
@@ -447,8 +456,6 @@ public class Ventana_principal extends javax.swing.JFrame {
         distancia = this.ParMasCercano.mas_cerca(Px, Py, general1.length);
         medianas = this.ParMasCercano.getMedianas();
         bitacora = this.ParMasCercano.getBitacora();
-        System.out.println("size bitacora:"+bitacora.size());
-        System.out.println("size medianas:"+medianas.size());
         grafica.createDataset(puntos, null, 0);
         //----Panel Inicial-------------------------------
         actual = grafica.generar_panel(null, 0);
@@ -461,7 +468,9 @@ public class Ventana_principal extends javax.swing.JFrame {
                 indicep++;
                 if (indicem < medianas.size()) {
                     panelpuntos.remove(actual);
+                    if(indicep< bitacora.size()){
                     grafica.createDataset(puntos, bitacora.get(indicep).getArreglo(), 0);
+                    }
                     actual = grafica.generar_panel(medianas, indicem);
                     panelpuntos.add(actual);
                     panelpuntos.updateUI();
@@ -490,27 +499,55 @@ public class Ventana_principal extends javax.swing.JFrame {
         prev.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 indicem--;
+                indicep--;
                 if (indicem >= 0) {
                     panelpuntos.remove(actual);
+                    if(indicep >= 0 ){
+                    grafica.createDataset(puntos, bitacora.get(indicep).getArreglo(), 0);
+                    }
                     actual = grafica.generar_panel(medianas, indicem);
                     panelpuntos.add(actual);
                     panelpuntos.updateUI();
 
                 } else {
                     indicem = 0;
+                    indicep=0;
                 }
 
             }
         });
-
-        panelpuntos.add(actual);
+           //------------------------Ultima Accion------------------
+         JButton terminar = new JButton("Salir");
+        terminar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                puntos_cercanos.dispose();
+                par_cercano.dispose();
+                puntos = new ArrayList();
+                medianas = new ArrayList();
+                bitacora = new ArrayList();
+                indice = -1;
+                indicem = -1;
+                indicep = -1;
+                panelpuntos = new JPanel(gridp);
+                panel_botones = new JPanel(flowp);
+                puntos_cercanos = new JFrame();
+                puntos_cercanos.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                
+            }
+        });
+        
+        
         this.panel_botones.add(prev);
         this.panel_botones.add(next);
+        this.panel_botones.add(terminar);
         this.panelpuntos.add(this.panel_botones);
+        panelpuntos.add(actual);
         this.puntos_cercanos.add(this.panelpuntos);
         this.puntos_cercanos.repaint();
         this.puntos_cercanos.pack();
         this.puntos_cercanos.setVisible(true);
+        
+        }
     }//GEN-LAST:event_jButton6MouseClicked
 
     /**
@@ -667,5 +704,14 @@ public class Ventana_principal extends javax.swing.JFrame {
         return x;
     }
     
-    ;
+    private boolean puntos_repetidos(int x, int y){
+        boolean repetido=false;
+        for (int i = 0; i < this.puntos.size(); i++) {
+            if((this.puntos.get(i).getX()==x) && (this.puntos.get(i).getY()==y)){
+                repetido=true;
+                break;
+            }
+        }
+        return repetido;
+    }
 }
