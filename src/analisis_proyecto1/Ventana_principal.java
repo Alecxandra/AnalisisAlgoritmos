@@ -421,77 +421,82 @@ public class Ventana_principal extends javax.swing.JFrame {
 
     //------------------------Par de puntos mas cercanos------------------------------------
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
-        puntos.add(new puntos(20,4));
-        puntos.add(new puntos(1,10));
-        puntos.add(new puntos(2,24));
-        puntos.add(new puntos(10,3));
-        puntos.add(new puntos(5,10));
-        puntos.add(new puntos(3,3));
-        puntos.add(new puntos(7,3));
-        puntos.add(new puntos(21,7));
-        puntos.add(new puntos(5,5));
-        puntos.add(new puntos(10,7));
-        puntos.add(new puntos(1,1));
-        puntos.add(new puntos(1,2));
+        puntos.add(new puntos(2, 3));
+        puntos.add(new puntos(12, 30));
+        puntos.add(new puntos(40, 50));
+        puntos.add(new puntos(5, 1));
+        puntos.add(new puntos(3, 14));
+        puntos.add(new puntos(20, 4));
+        puntos.add(new puntos(1, 10));
+        puntos.add(new puntos(20, 24));
+        puntos.add(new puntos(10, 3));
+        puntos.add(new puntos(12, 3));
+        puntos.add(new puntos(7, 3));
+        puntos.add(new puntos(21, 7));
+        puntos.add(new puntos(10, 7));
+        puntos.add(new puntos(15, 1));
+        puntos.add(new puntos(9, 5));
+        puntos.add(new puntos(24, 5));
+        puntos.add(new puntos(30, 6));
+        puntos.add(new puntos(38, 60));
         puntos[] general1 = convertir();
-        puntos[] general2 =  convertir();
+        puntos[] general2 = convertir();
         puntos[] Px = sortx(general1);
         puntos[] Py = sorty(general2);
-        this.ParMasCercano= new cerca(puntos);
-        distancia=this.ParMasCercano.mas_cerca(Px, Py, general1.length);
+        this.ParMasCercano = new cerca(puntos);
+        distancia = this.ParMasCercano.mas_cerca(Px, Py, general1.length);
         medianas = this.ParMasCercano.getMedianas();
-       // System.out.println("size: mediana " +medianas.size());
-        grafica.createDataset(puntos,null,0);
+        grafica.createDataset(puntos, null, 0);
         //----Panel Inicial-------------------------------
-         actual = grafica.generar_panel(null,0);
-         
+        actual = grafica.generar_panel(null, 0);
+
         //---------Boton Siguiente------------------------
         JButton next = new JButton("Siguiente");
         next.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 indicem++;
-                if(indicem<medianas.size()){
-                panelpuntos.remove(actual);
-                actual = grafica.generar_panel(medianas, indicem);
-                panelpuntos.add(actual);
-                panelpuntos.updateUI();
-                } else if(indicem==medianas.size()){
-                    grafica.createDataset(puntos, ParMasCercano.getPares(),1);
+                if (indicem < medianas.size()) {
+                    panelpuntos.remove(actual);
+                    actual = grafica.generar_panel(medianas, indicem);
+                    panelpuntos.add(actual);
+                    panelpuntos.updateUI();
+                } else if (indicem == medianas.size()) {
+                    grafica.createDataset(puntos, ParMasCercano.getPares(), 1);
                     panelpuntos.remove(actual);
                     actual = grafica.generar_panel(medianas, indicem - 1);
                     panelpuntos.add(actual);
                     panelpuntos.updateUI();
-                    String resp="El par de puntos mas cercanos son:"+'\n';
-                    resp+="("+ParMasCercano.getPares()[0].getX()+","+ParMasCercano.getPares()[0].getY()+")";
-                    resp+=",";
-                    resp+="("+ParMasCercano.getPares()[1].getX()+","+ParMasCercano.getPares()[1].getY()+")"+'\n';
-                    resp+="Distancia:"+distancia;
-                   JOptionPane.showMessageDialog(null,resp);
-                }else{
-                  indicem= medianas.size()-1;
+                    String resp = "El par de puntos mas cercanos son:" + '\n';
+                    resp += "(" + ParMasCercano.getPares()[0].getX() + "," + ParMasCercano.getPares()[0].getY() + ")";
+                    resp += ",";
+                    resp += "(" + ParMasCercano.getPares()[1].getX() + "," + ParMasCercano.getPares()[1].getY() + ")" + '\n';
+                    resp += "Distancia:" + distancia;
+                    JOptionPane.showMessageDialog(null, resp);
+                } else {
+                    indicem = medianas.size() - 1;
                 }
-                
+
             }
         });
-        
+
         //-----------Boton Antes-----------------
         JButton prev = new JButton("Antes");
         prev.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 indicem--;
-                if(indicem>=0){
-                panelpuntos.remove(actual);
-                actual = grafica.generar_panel(medianas, indicem);
-                panelpuntos.add(actual);
-                panelpuntos.updateUI();
-                
-                }else{
-                indicem=0;
+                if (indicem >= 0) {
+                    panelpuntos.remove(actual);
+                    actual = grafica.generar_panel(medianas, indicem);
+                    panelpuntos.add(actual);
+                    panelpuntos.updateUI();
+
+                } else {
+                    indicem = 0;
                 }
-                
+
             }
         });
-        
+
         panelpuntos.add(actual);
         this.panel_botones.add(prev);
         this.panel_botones.add(next);

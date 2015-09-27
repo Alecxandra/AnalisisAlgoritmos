@@ -78,12 +78,11 @@ public class cerca {
     }
 
     public double fuerzaBruta(puntos[] puntos) {
-        //System.out.println("length fuerza bruta:" + puntos.length);
         double distancia_minima = Double.MAX_VALUE;
         for (int i = 0; i < puntos.length; i++) {
             for (int j = i + 1; j < puntos.length; j++) {
                 double dist = distance(puntos[i], puntos[j]);
-                if (dist < distancia_minima) {
+                  if (dist < distancia_minima) {
                     distancia_minima = dist;
                     pares[0] = puntos[i];
                     pares[1] = puntos[j];
@@ -91,8 +90,7 @@ public class cerca {
                 }
             }
         }
-        //System.out.println(distancia_minima);
-       
+        
         return distancia_minima;
     }
 
@@ -115,57 +113,51 @@ public class cerca {
     public double mas_cerca(puntos[] Px, puntos[] Py, int n) {
         //---La mitad del plano de los puntos
         if (n <= 3) {
-            return fuerzaBruta(Px);
+           return fuerzaBruta(Py);
         }
-        /*
-        System.out.println("--------PX------------");
-        for (int i = 0; i < Px.length; i++) {
-            System.out.println(Px[i].getX() + "," + Px[i].getY());
-        }
-        System.out.println("--------PY------------");
-        for (int i = 0; i < Py.length; i++) {
-            System.out.println(Py[i].getX() + "," + Py[i].getY());
-        }*/
+
         int mediana = n / 2;
-        /*System.out.println("-------------------");
-        System.out.println("Primera mediana:" + mediana);
-        System.out.println("--------------------");*/
         puntos punto_medio = Px[mediana];
-        //System.out.println("punto medio" + punto_medio.getX() + "," + punto_medio.getY());
         puntos[] copia = Py;
         sortx(copia);
-        int rectam = (copia[copia.length - 1].getX() - copia[0].getX()) / 2;
-        /*System.out.println("--------------------");
-        System.out.println("MEDIANA C: " + rectam);*/
+        int rectam = ((copia[copia.length - 1].getX() + copia[0].getX()) / 2);
         medianas.add(rectam);
 
         //---diviendo el arreglo de puntos en dos
         puntos[] izquierda = new puntos[mediana + 1];
         puntos[] derecha = new puntos[n - mediana - 1];
-        /*System.out.println("Length Izquierda:" + (mediana + 1));
-        System.out.println("Length Derecha:" + (n - mediana - 1));*/
+
         //--indices--
         int inderecho = -1;
         int inizquierdo = -1;
         //-----ubicando los puntos en su parte correspondiente-------
-        for (int i = 0; i < n; i++) {
-            if (i >= 0 && i < (mediana + 1)) {
-                inizquierdo += 1;
-                izquierda[inizquierdo] = Py[i];
-            } else {
-                inderecho += 1;
-                derecha[inderecho] = Py[i];
-            }
+
+        for (int i = 0; i < (mediana + 1); i++) {
+            inizquierdo += 1;
+            izquierda[inizquierdo] = Py[i];
+        }
+
+        for (int i = mediana + 1; i < n; i++) {
+            inderecho += 1;
+            derecha[inderecho] = Py[i];
         }
         //--llamando a la funcion para que calcule el minimo de las dos mitades
-        double distizquierda = mas_cerca(Px, izquierda, izquierda.length);
+
+        sorty(izquierda);
+        sorty(derecha);
         
+        double distizquierda = mas_cerca(Px, izquierda, izquierda.length);
+        System.out.println("pares 1------");
+        System.out.println(pares[0].getX()+","+pares[0].getY());
+        System.out.println(pares[1].getX()+","+pares[1].getY());
         double disderecha = mas_cerca(Px, derecha, derecha.length);
-         
+        System.out.println("pares 2------");
+        System.out.println(pares[0].getX()+","+pares[0].getY());
+        System.out.println(pares[1].getX()+","+pares[1].getY()); 
         //--encontrando la distancia mas pequeña
         double Smallestd = minimo(distizquierda, disderecha);
 
-      //---Creando un arreglo con los puntos cercanos a Smallestd----
+        //---Creando un arreglo con los puntos cercanos a Smallestd----
         //la linea que pasa en medio del punto
         puntos[] enmedio = new puntos[n];
         int indice = 0;
@@ -175,10 +167,10 @@ public class cerca {
                 indice++;
             }
         }
-        
-        double ultimo=ultimos_puntos(enmedio, indice, Smallestd);
-        
+
+        double ultimo = ultimos_puntos(enmedio, indice, Smallestd);
+
         return minimo(Smallestd, ultimo);
     }
-    
+
 }
